@@ -3,6 +3,7 @@ from requests import get
 from os.path import isfile
 from os import remove
 from subprocess import run
+from xmltodict import parse
 
 @click.command("lol")
 @click.option('--modloader', type=str, default=None, help="forge/fabric/quilt support, default is Vanila")
@@ -30,6 +31,7 @@ class Downloader:
         self.client = client
 
     def install(self):
+        self.install_minecraft_library()
         if self.modloader == "forge":
             self.install_forge()
         elif self.modloader == "fabric":
@@ -44,7 +46,17 @@ class Downloader:
         raise NotImplementedError
 
     def install_fabric(self):
-        raise NotImplementedError
+        lversion = parse(get("https://maven.fabricmc.net/net/fabricmc/fabric-installer/maven-metadata.xml").content)["metadata"]["versioning"]["latest"]
+        with get(f"https://maven.fabricmc.net/net/fabricmc/fabric-installer/{lversion}/fabric-installer-{lversion}.jar") as a: # type: ignore
+            if isfile("fabric-installer.jar"):
+                remove("fabric-installer.jar")
+            with open("fabric-installer.jar", "wb") as f:
+                f.write(a.content)
+        if self.client is True:
+            cstring = "client -noprofile"
+        else:
+            cstring = "server"
+        shell_run(f"java -jar fabric-installer.jar {cstring} -mcversion {self.version} -path {self.path} -noprofile")
 
     def install_forge(self):
         options = {}
@@ -53,14 +65,14 @@ class Downloader:
                 options[i.removesuffix("-latest")] = i2
         with get(f"https://maven.minecraftforge.net/net/minecraftforge/forge/{self.version}-{options[self.version]}/forge-{self.version}-{options[self.version]}-installer.jar") as a: # type: ignore
             print(f"{a.url}: {a.status_code}")
-            if isfile("forge.jar"):
-                remove("forge.jar")
-            with open("forge.jar", "wb") as f:
+            if isfile("forge-installer.jar"):
+                remove("forge-installer.jar")
+            with open("forge-installer.jar", "wb") as f:
                 f.write(a.content)
         if self.client:
-            shell_run("java -jar forge.jar")
+            shell_run("java -jar forge-installer.jar")
         else:
-            shell_run("java -jar forge.jar --installServer")
+            shell_run("java -jar forge-installer.jar --installServer")
 
     def install_quilt(self):
         raise NotImplementedError
