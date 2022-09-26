@@ -75,7 +75,15 @@ class Downloader:
             shell_run("java -jar forge-installer.jar --installServer")
 
     def install_quilt(self):
-        raise NotImplementedError
+        with get("https://maven.quiltmc.org/repository/release/org/quiltmc/quilt-installer/latest/quilt-installer-latest.jar") as a: # type: ignore
+            if isfile("quilt.jar"):
+                remove("quilt.jar")
+            with open("quilt.jar", "wb") as f:
+                f.write(a.content)
+        if self.client:
+            shell_run("java -jar quilt.jar")
+        else:
+            shell_run("java -jar quilt.jar install server 1.19.2 --download-server")
 
 if __name__ == "__main__":
     main()
