@@ -4,6 +4,15 @@ from os.path import isfile
 from os import remove
 from subprocess import run
 from xmltodict import parse
+from webbrowser import open as webopen
+from minecraft_launcher_lib.install import install_minecraft_version
+from minecraft_launcher_lib.exceptions import VersionNotFound
+from minecraft_launcher_lib.microsoft_account import get_secure_login_data, parse_auth_code_url, complete_login
+from minecraft_launcher_lib.command import get_minecraft_command
+from tqdm import tqdm
+
+client_id = "1a92c271-496c-496d-b2ac-3bced4d11853"
+redirect_url = "http://localhost"
 
 @click.command("lol")
 @click.option('--modloader', type=str, default=None, help="forge/fabric/quilt support, default is Vanila")
@@ -29,18 +38,42 @@ class Downloader:
         self.run = run
         self.ram = ram
         self.client = client
+        self.progress: tqdm | None = None
+
+    def __set_status__(self, _status: str):
+        pass
+
+    def __set_progress__(self, _progress: int):
+        self.progress.update(1) # type: ignore
+
+    def __set_max__(self, n: int):
+        if self.progress is not None:
+            self.progress.close()
+        self.progress = tqdm(total=n)
 
     def install(self):
-        self.install_minecraft_library()
+        try:
+            install_minecraft_version(self.version, self.path, {
+            "setStatus": self.__set_status__,
+            "setMax": self.__set_max__,
+            "setProgress": self.__set_progress__
+        })
+        except VersionNotFound:
+            print("Can't find version")
+            return
         if self.modloader == "forge":
             self.install_forge()
         elif self.modloader == "fabric":
             self.install_fabric()
         elif self.modloader == "quilt":
             self.install_quilt()
-
-    def install_minecraft_library(self):
-        raise NotImplementedError
+        lu, state, verifier = get_secure_login_data(client_id, redirect_url)
+        webopen(lu)
+        try:
+            parse_auth_code_url(input("please input your url."), state)
+        except Exception:
+            print("Auth code doesn't work")
+            return
 
     def run_minecraft(self):
         raise NotImplementedError
