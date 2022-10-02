@@ -51,6 +51,24 @@ class Downloader:
                         shell_run(f"portablemc --main-dir={self.dir['main']} start {self.modloader}:{self.version['mc']}:{self.version['modloader']} --jvm-args='-Xmx{self.ram}G -Xms{self.ram}G -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:G1NewSizePercent=20 -XX:G1ReservePercent=20 -XX:MaxGCPauseMillis=50 -XX:G1HeapRegionSize=32M'")
                     else:
                         shell_run(f"portablemc --main-dir={self.dir['main']} --work-dir={self.dir['data']} start {self.modloader}:{self.version['mc']}:{self.version['modloader']} --jvm-args='-Xmx{self.ram}G -Xms{self.ram}G -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:G1NewSizePercent=20 -XX:G1ReservePercent=20 -XX:MaxGCPauseMillis=50 -XX:G1HeapRegionSize=32M'")
+        else:
+            if self.modloader is None:
+                self.install_purpur()
+            elif self.modloader == "forge":
+                self.install_forge()
+            elif self.modloader == "fabric":
+                self.install_fabric()
+            elif self.modloader == "quilt":
+                self.install_quilt()
+
+    def install_purpur(self):
+        if self.version['mc'] is None:
+            self.version['mc'] = "latest"
+        with get(f"https://api.purpurmc.org/v2/purpur/{self.version['mc']}/latest/download") as a:
+            if isfile('purpur.jar'):
+                remove('purpur.jar')
+            with open('purpur.jar', 'wb') as f:
+                f.write(a.content)
 
     def install_fabric(self):
         lversion = parse(get("https://maven.fabricmc.net/net/fabricmc/fabric-installer/maven-metadata.xml").content)["metadata"]["versioning"]["latest"]
@@ -60,18 +78,21 @@ class Downloader:
             with open("fabric-installer.jar", "wb") as f:
                 f.write(a.content)
         if self.version['mc'] is None:
-            shell_run(f"java -jar fabric-installer.jar -mcversion {self.version['mc']} -path {self.dir['main']} -noprofile -snapshot")
+            shell_run(f"java -jar fabric-installer.jar server -path {self.dir['main']} -noprofile -snapshot")
         else:
-            shell_run(f"java -jar fabric-installer.jar -mcversion {self.version['mc']} -path {self.dir['main']} -noprofile -snapshot -loader {self.version['modloader']}")
+            shell_run(f"java -jar fabric-installer.jar server -mcversion {self.version['mc']} -path {self.dir['main']} -noprofile -snapshot -loader {self.version['modloader']}")
 
     def install_forge(self):
         options = {}
         for i, i2 in get("https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json").json()["promos"].items():
             if i.endswith("latest"):
                 options[i.removesuffix("-latest")] = i2
+        if self.version['mc'] is None:
+            self.version['mc'] = next(iter(options.values()))
+        print(self.version['mc'])
         if self.version["modloader"] is not None:
             options[self.version["mc"]] = self.version["modloader"]
-        with get(f"https://maven.minecraftforge.net/net/minecraftforge/forge/{self.version['mc']}-{options[self.version['modloader']]}/forge-{self.version['mc']}-{options[self.version['mc']]}-installer.jar") as a: # type: ignore
+        with get(f"https://maven.minecraftforge.net/net/minecraftforge/forge/{self.version['mc']}-{options[self.version['mc']]}/forge-{self.version['mc']}-{options[self.version['mc']]}-installer.jar") as a: # type: ignore
             if a.status_code == 404:
                 print("can't find version")
                 return
