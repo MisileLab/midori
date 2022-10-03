@@ -64,17 +64,6 @@ optional = false
 python-versions = "*"
 
 [[package]]
-name = "ordered-set"
-version = "4.1.0"
-description = "An OrderedSet is a custom MutableSet that remembers its order, so that every"
-category = "main"
-optional = false
-python-versions = ">=3.7"
-
-[package.extras]
-dev = ["black", "mypy", "pytest"]
-
-[[package]]
 name = "portablemc"
 version = "3.1.1"
 description = "PortableMC is a module that provides both an API for development of your custom launcher and an executable script to run PortableMC CLI."
@@ -173,7 +162,7 @@ python-versions = ">=3.4"
 [metadata]
 lock-version = "1.1"
 python-versions = "3.10.7"
-content-hash = "37b9b599ca960bfcf7ebca8a158549af60ed6fe0df1f3544c97823de934e88ce"
+content-hash = "642d2268568d05674b0abb3553cb2a7d8191212fe63e8cdc7b4881edfd7c0cf3"
 
 [metadata.files]
 certifi = [
@@ -305,10 +294,6 @@ msgpack = [
     {file = "msgpack-1.0.4-cp39-cp39-win32.whl", hash = "sha256:fb62ea4b62bfcb0b380d5680f9a4b3f9a2d166d9394e9bbd9666c0ee09a3645c"},
     {file = "msgpack-1.0.4-cp39-cp39-win_amd64.whl", hash = "sha256:4d5834a2a48965a349da1c5a79760d94a1a0172fbb5ab6b5b33cbf8447e109ce"},
     {file = "msgpack-1.0.4.tar.gz", hash = "sha256:f5d869c18f030202eb412f08b28d2afeea553d6613aee89e200d7aca7ef01f5f"},
-]
-ordered-set = [
-    {file = "ordered-set-4.1.0.tar.gz", hash = "sha256:694a8e44c87657c59292ede72891eb91d34131f6531463aab3009191c77364a8"},
-    {file = "ordered_set-4.1.0-py3-none-any.whl", hash = "sha256:046e1132c71fcf3330438a539928932caf51ddbc582496833e23de611de14562"},
 ]
 portablemc = [
     {file = "portablemc-3.1.1-py3-none-any.whl", hash = "sha256:62af6f64533a304520c7d2e646553cb867d3c9a9a659fb3b5c538ecfc2d131b3"},
