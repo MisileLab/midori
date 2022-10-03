@@ -94,6 +94,17 @@ python-versions = ">=3.6"
 portablemc = ">=3,<4"
 
 [[package]]
+name = "portablemc-quilt"
+version = "1.0.0"
+description = "Start Minecraft using the Quilt mod loader using '<exec> start quilt:[<mc-version>[:<loader-version>]]'."
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+portablemc = ">=3,<4"
+
+[[package]]
 name = "pynvim"
 version = "0.4.3"
 description = "Python client to neovim"
@@ -151,7 +162,7 @@ python-versions = ">=3.4"
 [metadata]
 lock-version = "1.1"
 python-versions = "3.10.7"
-content-hash = "efd7b268bc092ef1d4f3f218e65f7fd53a61927002bcf1859eb9ad8758b5beb2"
+content-hash = "642d2268568d05674b0abb3553cb2a7d8191212fe63e8cdc7b4881edfd7c0cf3"
 
 [metadata.files]
 certifi = [
@@ -295,6 +306,10 @@ portablemc-fabric = [
 portablemc-forge = [
     {file = "portablemc-forge-2.0.1.tar.gz", hash = "sha256:3c87bda4829ebc1e547873804408ff68670ede5bcea7a6a70860ff761e08724c"},
     {file = "portablemc_forge-2.0.1-py3-none-any.whl", hash = "sha256:064bb050d74c19aab9f4cbb7b41eced6416880bc56af5350fc4cf006031d8a8a"},
+]
+portablemc-quilt = [
+    {file = "portablemc-quilt-1.0.0.tar.gz", hash = "sha256:9eef98a3a953d9e367b26d8044b256ca722817104747469bbff2911d1d1b6466"},
+    {file = "portablemc_quilt-1.0.0-py3-none-any.whl", hash = "sha256:e0f47f11609503a79383b8fcdd20301e092eb41f112cd4cefb2e089b6f18bb9b"},
 ]
 pynvim = [
     {file = "pynvim-0.4.3.tar.gz", hash = "sha256:3a795378bde5e8092fbeb3a1a99be9c613d2685542f1db0e5c6fd467eed56dff"},
