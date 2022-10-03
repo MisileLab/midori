@@ -4,9 +4,7 @@ from os.path import isfile
 from os import remove, getcwd, chdir
 from subprocess import run
 from xmltodict import parse
-
-client_id = "1a92c271-496c-496d-b2ac-3bced4d11853"
-redirect_url = "http://localhost"
+from platform import system as getos
 
 @click.command("lol")
 @click.option('--modloader', type=str, default=None, help="forge/fabric/quilt support, default is Vanila")
@@ -35,22 +33,16 @@ class Downloader:
 
     def install(self):
         if self.client:
-            if self.modloader is None:
-                if self.dir["data"] is None:
-                    shell_run(f"portablemc --main-dir={self.dir['main']} start self.version['mc'] --jvm-args='-Xmx{self.ram}G -Xms{self.ram}G -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:G1NewSizePercent=20 -XX:G1ReservePercent=20 -XX:MaxGCPauseMillis=50 -XX:G1HeapRegionSize=32M'")
-                else:
-                    shell_run(f"portablemc --main-dir={self.dir['main']} --work-dir={self.dir['data']} start self.version['mc'] --jvm-args='-Xmx{self.ram}G -Xms{self.ram}G -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:G1NewSizePercent=20 -XX:G1ReservePercent=20 -XX:MaxGCPauseMillis=50 -XX:G1HeapRegionSize=32M'")
-            else:
-                if self.version["modloader"] is None:
-                    if self.dir["data"] is None:
-                        shell_run(f"portablemc --main-dir={self.dir['main']} start {self.modloader}:{self.version['mc']} --jvm-args='-Xmx{self.ram}G -Xms{self.ram}G -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:G1NewSizePercent=20 -XX:G1ReservePercent=20 -XX:MaxGCPauseMillis=50 -XX:G1HeapRegionSize=32M'")
-                    else:
-                        shell_run(f"portablemc --main-dir={self.dir['main']} --work-dir={self.dir['data']} start {self.modloader}:{self.version['mc']} --jvm-args='-Xmx{self.ram}G -Xms{self.ram}G -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:G1NewSizePercent=20 -XX:G1ReservePercent=20 -XX:MaxGCPauseMillis=50 -XX:G1HeapRegionSize=32M'")
-                else:
-                    if self.dir["data"] is None:
-                        shell_run(f"portablemc --main-dir={self.dir['main']} start {self.modloader}:{self.version['mc']}:{self.version['modloader']} --jvm-args='-Xmx{self.ram}G -Xms{self.ram}G -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:G1NewSizePercent=20 -XX:G1ReservePercent=20 -XX:MaxGCPauseMillis=50 -XX:G1HeapRegionSize=32M'")
-                    else:
-                        shell_run(f"portablemc --main-dir={self.dir['main']} --work-dir={self.dir['data']} start {self.modloader}:{self.version['mc']}:{self.version['modloader']} --jvm-args='-Xmx{self.ram}G -Xms{self.ram}G -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:G1NewSizePercent=20 -XX:G1ReservePercent=20 -XX:MaxGCPauseMillis=50 -XX:G1HeapRegionSize=32M'")
+            string = f"portablemc --main-dir={self.dir['main']} "
+            if self.dir["data"] is not None:
+                string = string + f"--work-dir={self.dir['data']} "
+            string = string + "start "
+            if self.modloader is not None:
+                string = string + self.modloader + ":"
+            string = string + self.version['mc']
+            if self.version["modloader"] is not None:
+                string = string + self.version['modloader']
+            string = string + f" --jvm-args='-Xmx{self.ram}G -Xms{self.ram}G -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:G1NewSizePercent=20 -XX:G1ReservePercent=20 -XX:MaxGCPauseMillis=50 -XX:G1HeapRegionSize=32M'"
         else:
             if self.modloader is None:
                 self.install_purpur()
@@ -81,6 +73,7 @@ class Downloader:
             shell_run(f"java -jar fabric-installer.jar server -path {self.dir['main']} -noprofile -snapshot")
         else:
             shell_run(f"java -jar fabric-installer.jar server -mcversion {self.version['mc']} -path {self.dir['main']} -noprofile -snapshot -loader {self.version['modloader']}")
+        remove("fabric-installer.jar")
 
     def install_forge(self):
         options = {}
@@ -102,22 +95,34 @@ class Downloader:
                 f.write(a.content)
         orgd = getcwd()
         chdir(self.dir["main"])
-        shell_run(f"java -jar forge-installer.jar --installServer")
+        if getos().lower() == "windows":
+            s = f"java -jar {orgd}\\forge-installer.jar"
+        else:
+            s = f"java -jar {orgd}/forge-installer.jar"
+        s = s + " --installServer"
+        shell_run(s)
         chdir(orgd)
+        remove("forge-installer.jar")
 
     def install_quilt(self):
         with get("https://maven.quiltmc.org/repository/release/org/quiltmc/quilt-installer/latest/quilt-installer-latest.jar") as a: # type: ignore
             if a.status_code == 404:
                 print("can't find version")
                 return
-            if isfile("quilt.jar"):
-                remove("quilt.jar")
-            with open("quilt.jar", "wb") as f:
+            if isfile("quilt-installer.jar"):
+                remove("quilt-installer.jar")
+            with open("quilt-installer.jar", "wb") as f:
                 f.write(a.content)
         orgd = getcwd()
         chdir(self.dir["main"])
-        shell_run("java -jar quilt.jar install server {self.version['mc']} --download-server")
+        if getos().lower() == "windows": 
+            s = f"java -jar {orgd}\\quilt-installer.jar"
+        else:
+            s = f"java -jar {orgd}/quilt-installer.jar"
+        s = s + f" install server {self.version['mc']} --download-server"
+        shell_run(s)
         chdir(orgd)
+        remove("quilt-installer.jar")
 
 if __name__ == "__main__":
     main()
