@@ -70,7 +70,9 @@ class Downloader:
             with open("fabric-installer.jar", "wb") as f:
                 f.write(a.content)
         if self.version['mc'] is None:
-            shell_run(f"java -jar fabric-installer.jar server -path {self.dir['main']} -noprofile -snapshot")
+            shell_run(f"java -jar fabric-installer.jar server -path {self.dir['main']} -noprofile")
+        elif self.version['modloader'] is None:
+            shell_run(f"java -jar fabric-installer.jar server -path {self.dir['main']} -noprofile -mcversion {self.version['mc']}")
         else:
             shell_run(f"java -jar fabric-installer.jar server -mcversion {self.version['mc']} -path {self.dir['main']} -noprofile -snapshot -loader {self.version['modloader']}")
         remove("fabric-installer.jar")
@@ -81,7 +83,10 @@ class Downloader:
             if i.endswith("latest"):
                 options[i.removesuffix("-latest")] = i2
         if self.version['mc'] is None:
-            self.version['mc'] = next(iter(options.values()))
+            options2 = [*options]
+            options2.reverse()
+            self.version['mc'] = next(iter(options2))
+            del options2
         print(self.version['mc'])
         if self.version["modloader"] is not None:
             options[self.version["mc"]] = self.version["modloader"]
