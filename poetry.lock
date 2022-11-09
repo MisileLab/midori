@@ -66,7 +66,7 @@ python-versions = "*"
 
 [[package]]
 name = "portablemc"
-version = "3.1.1"
+version = "3.2.0"
 description = "PortableMC is a module that provides both an API for development of your custom launcher and an executable script to run PortableMC CLI."
 category = "main"
 optional = false
@@ -163,7 +163,7 @@ python-versions = ">=3.4"
 [metadata]
 lock-version = "1.1"
 python-versions = "3.11.0"
-content-hash = "db01b710fec8b843ec2d6d79c0454759f0b5bd41b9f0e0158ec61769b9b9903f"
+content-hash = "b8df93d1156f06ca4414988897b1cae5f4deb084c936811094cdbe4efd61da40"
 
 [metadata.files]
 certifi = [
@@ -303,8 +303,8 @@ msgpack = [
     {file = "msgpack-1.0.4.tar.gz", hash = "sha256:f5d869c18f030202eb412f08b28d2afeea553d6613aee89e200d7aca7ef01f5f"},
 ]
 portablemc = [
-    {file = "portablemc-3.1.1-py3-none-any.whl", hash = "sha256:62af6f64533a304520c7d2e646553cb867d3c9a9a659fb3b5c538ecfc2d131b3"},
-    {file = "portablemc-3.1.1.tar.gz", hash = "sha256:3ea5f66dc936d3aa6782d91a21b9f1e6cd66ef97ef8e7b8e3ded54224406b37a"},
+    {file = "portablemc-3.2.0-py3-none-any.whl", hash = "sha256:74cb5a2a25ed5f609290be4266420864d2891b4e833712aa4ac2b1e13b403034"},
+    {file = "portablemc-3.2.0.tar.gz", hash = "sha256:caab5075c136cc576c3c1b9d024bd2d29ca6d82aa01fb3272a8a7bc3c26c528f"},
 ]
 portablemc-fabric = [
     {file = "portablemc-fabric-2.0.1.tar.gz", hash = "sha256:5dbfd59f34dd7389dd6b03a09d1899f5eac0a7eb09f6dbb2a7b344389bc33c13"},
