@@ -108,7 +108,7 @@ class Downloader:
         shell_run(s)
         chdir(orgd)
         remove("forge-installer.jar")
-        remove("*.log")
+        remove("forge-installer.log")
 
     def install_quilt(self):
         with get("https://maven.quiltmc.org/repository/release/org/quiltmc/quilt-installer/latest/quilt-installer-latest.jar") as a: # type: ignore
