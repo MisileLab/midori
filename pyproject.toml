@@ -14,7 +14,7 @@ portablemc = "3.2.0"
 portablemc-forge = "2.0.1"
 portablemc-fabric = "2.0.1"
 portablemc-quilt = "1.0.0"
-requests = "2.28.1"
+requests = "2.28.2"
 
 [tool.poetry.group.nvim.dependencies]
 pynvim = "0.4.3"
