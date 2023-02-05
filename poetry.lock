@@ -204,14 +204,14 @@ files = [
 
 [[package]]
 name = "portablemc"
-version = "3.2.0"
+version = "3.2.1"
 description = "PortableMC is a module that provides both an API for development of your custom launcher and an executable script to run PortableMC CLI."
 category = "main"
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "portablemc-3.2.0-py3-none-any.whl", hash = "sha256:74cb5a2a25ed5f609290be4266420864d2891b4e833712aa4ac2b1e13b403034"},
-    {file = "portablemc-3.2.0.tar.gz", hash = "sha256:caab5075c136cc576c3c1b9d024bd2d29ca6d82aa01fb3272a8a7bc3c26c528f"},
+    {file = "portablemc-3.2.1-py3-none-any.whl", hash = "sha256:26d1cf275b0acd0410ba49bb02aebbaf6d6c71c38d5a8da3a5bfa0002acd8a82"},
+    {file = "portablemc-3.2.1.tar.gz", hash = "sha256:bffbaa8507cfd193ab4f2172e638340cef1f153ddbc3a7cc1332a47d8fa03fdc"},
 ]
 
 [[package]]
@@ -332,4 +332,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "3.11.0"
-content-hash = "075872d6048b358e8c7ee0b83c71be9415b250f7efbd427f846277fd63016775"
+content-hash = "3695d1e84fe18951d6f91c7025cf6ffe0682fd893153d888651f8bb4202e10f6"
